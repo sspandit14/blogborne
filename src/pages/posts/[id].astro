@@ -3,7 +3,7 @@ import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
   const posts = await getCollection(
-    "blog",
+    "posts",
     ({ data }) => !data.draft
   );
 

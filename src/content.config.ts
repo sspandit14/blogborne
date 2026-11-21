@@ -2,9 +2,9 @@ import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
-const blog = defineCollection({
+const posts = defineCollection({
   loader: glob({
-    base: "./src/content/blog",
+    base: "./src/content/posts",
     pattern: "**/*.md",
   }),
 
@@ -18,4 +18,4 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+export const collections = { posts };
