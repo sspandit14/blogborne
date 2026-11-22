@@ -1,0 +1,56 @@
+/* Site-wide base styles and small shared utilities.
+   Page-specific styles live in each page/component's own <style> block. */
+@import "./tokens.css";
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--body-text);
+  font-family: var(--font-body);
+  font-size: 19px;
+  line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--kicker); outline-offset: 3px; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+/* make the hidden attribute win over any class that sets display */
+[hidden] { display: none !important; }
+figure { margin: 0; }
+
+/* centred page column with side gutters */
+.wrap {
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* utilities shared by several pages */
+.sc     { font-variant-caps: all-small-caps; letter-spacing: 0.1em; }
+.kicker { color: var(--kicker); letter-spacing: 0.14em; }
+.muted  { color: var(--muted); }
+.soft   { color: var(--body-sub); }
+.label  { font-size: 16px; letter-spacing: 0.16em; color: var(--muted); }
+.bar    { color: var(--rules); }
+a.is-current { color: var(--accent); }
+
+.dropcap::first-letter {
+  float: left;
+  font-size: 4.6em;
+  line-height: 0.8;
+  padding: 0.1em 0.12em 0 0;
+  color: var(--blood);
+}
+
+/* .sr-only is the class Markdown footnotes use for their hidden heading */
+.visually-hidden, .sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}

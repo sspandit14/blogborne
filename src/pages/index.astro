@@ -1,16 +1,205 @@
 ---
+// Home. Layout from the chosen "Home — From Your Wireframe" mockup:
+// newspaper masthead → 70/30 grid (lead essay | Recent column) → Pinned row.
+import { Image } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE, SECTIONS } from "../site";
+import { getPublishedPosts, formatDate, excerpt, postHref } from "../lib/posts";
+
+const posts = await getPublishedPosts(); // newest first
+
+// Selection rules:
+// - lead   = newest featured post, else the newest post
+// - recent = the 3 newest posts other than the lead (only the first shows its cover)
+// - pinned = up to 3 pinned posts; the row is hidden when there are none
+const lead = posts.find((p) => p.data.featured) ?? posts[0];
+const recent = posts.filter((p) => p !== lead).slice(0, 3);
+const pinned = posts.filter((p) => p.data.pinned).slice(0, 3);
+
+const numerals = ["I", "II", "III"];
+const today = formatDate(new Date(), "full"); // the date the site was built
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <Fragment slot="header">
+    <div class="wrap">
+      <div class="topbar sc">
+        <span class="date">{today} · No. {posts.length}</span>
+        <nav class="utility" aria-label="Utility">
+          <a href="/search/">Search</a>
+          <a href="/about/">About</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+      </div>
+    </div>
+
+    <header class="wrap mast">
+      <h1>{SITE.title}</h1>
+      <p class="tagline">{SITE.tagline}</p>
+    </header>
+
+    <div class="wrap">
+      <nav class="sections sc" aria-label="Sections">
+        {SECTIONS.map((s, i) => (
+          <>
+            {i > 0 && <span class="bar" aria-hidden="true">|</span>}
+            <a href={s.href}>{s.label}</a>
+          </>
+        ))}
+      </nav>
+    </div>
+  </Fragment>
+
+  <main class="wrap">
+    <div class="home-grid">
+      {lead ? (
+        <article class="lead">
+          <span class="label sc">{lead.data.featured ? "Featured" : "Latest"}</span>
+          <h2><a href={postHref(lead)}>{lead.data.title}</a></h2>
+          {lead.data.kicker && <span class="kicker sc">{lead.data.kicker}</span>}
+          <div class="meta">
+            <time datetime={lead.data.pubDate.toISOString()}>{formatDate(lead.data.pubDate)}</time>
+            {lead.data.tags.length > 0 && (
+              <>
+                <span aria-hidden="true">·</span>
+                <i class="tags">{lead.data.tags.join(", ")}</i>
+              </>
+            )}
+          </div>
+
+          {lead.data.cover && (
+            <figure>
+              <Image
+                src={lead.data.cover}
+                alt={lead.data.coverAlt ?? ""}
+                widths={[640, 1120, 2240]}
+                sizes="(max-width: 1000px) 100vw, 70vw"
+                loading="eager"
+              />
+              {lead.data.coverCaption && (
+                <figcaption><span class="cap">{lead.data.coverCaption}</span></figcaption>
+              )}
+            </figure>
+          )}
+
+          <div class="excerpt">
+            <p class="dropcap">{excerpt(lead.body)}</p>
+            <a class="more sc" href={postHref(lead)}>Read more →</a>
+          </div>
+        </article>
+      ) : (
+        <p class="lead soft"><i>No essays yet.</i></p>
+      )}
+
+      <aside class="recent" aria-labelledby="recent-h">
+        <h2 id="recent-h" class="sc">Recent</h2>
+        {recent.map((p, i) => (
+          <article class:list={["ritem", { first: i === 0 }]}>
+            {i === 0 && p.data.cover && (
+              <div class="thumb">
+                <Image src={p.data.cover} alt={p.data.coverAlt ?? ""} widths={[400, 800]} sizes="(max-width: 1000px) 100vw, 30vw" />
+              </div>
+            )}
+            <h3><a href={postHref(p)}>{p.data.title}</a></h3>
+            {p.data.kicker && <span class="kicker sc">{p.data.kicker}</span>}
+            <span class="when">{formatDate(p.data.pubDate, "short")}</span>
+          </article>
+        ))}
+
+        <div class="notice">
+          <span class="label sc">— Notice —</span>
+          <p>Follow new essays in your feed reader.</p>
+          <a class="btn-outline sc" href="/rss.xml">Subscribe by RSS</a>
+        </div>
+      </aside>
+    </div>
+
+    {pinned.length > 0 && (
+      <section class="pinned" aria-labelledby="pinned-h">
+        <div class="section-head"><h2 id="pinned-h" class="sc">Pinned</h2></div>
+        <div class="pin-grid">
+          {pinned.map((p, i) => (
+            <article class="pin">
+              <span class="pin-no" aria-hidden="true">{numerals[i]}</span>
+              <h3><a href={postHref(p)}>{p.data.title}</a></h3>
+              <p>{p.data.description}</p>
+              {p.data.kicker && <span class="kicker sc">{p.data.kicker}</span>}
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
+</BaseLayout>
+
+<style>
+  /* ---- masthead ---- */
+  .topbar {
+    min-height: 46px; display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 6px 24px; border-bottom: 1px solid var(--rules); font-size: 18px; color: var(--muted);
+  }
+  .utility { display: flex; gap: 22px; }
+  .mast { min-height: 160px; display: grid; justify-items: center; align-content: center; gap: 6px; padding-block: 12px; text-align: center; }
+  .mast h1 { margin: 0; font-family: var(--font-mast); font-weight: 400; font-size: clamp(56px, 8vw, 108px); line-height: 1; }
+  .tagline { margin: 0; display: flex; align-items: center; gap: 16px; font-style: italic; font-size: 18px; color: var(--muted); }
+  .tagline::before, .tagline::after { content: ""; width: 48px; height: 1px; background: var(--rules); flex-shrink: 0; }
+  .sections {
+    min-height: 46px; display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
+    border-top: 4px double var(--rules); border-bottom: 1px solid var(--rules); font-size: 19px;
+  }
+  .sections a { padding: 8px 18px; }
+
+  /* ---- lead + recent ---- */
+  .home-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 3fr); gap: 48px; padding-top: 36px; }
+  .lead { display: flex; flex-direction: column; gap: 12px; min-width: 0; margin: 0; }
+  .lead h2 { margin: 0; font-weight: 500; font-size: clamp(36px, 4.2vw, 60px); line-height: 1.06; text-wrap: balance; }
+  .lead .kicker { font-size: 19px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 17px; color: var(--muted); }
+  .tags { text-transform: capitalize; }
+  .lead figure { margin-top: 12px; }
+  .lead figure :global(img) { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; border: 1px solid var(--rules); background: var(--surface); }
+  figcaption { padding-top: 6px; font-size: 15px; color: var(--muted); }
+  .cap { font-style: italic; }
+  .excerpt { max-width: 720px; padding-top: 8px; }
+  .excerpt p { margin: 0; text-align: justify; hyphens: auto; }
+  .more { display: inline-block; margin-top: 8px; padding: 10px 0; font-size: 19px; color: var(--accent); }
+
+  .recent { border-left: 1px solid var(--rules); padding-left: 36px; display: flex; flex-direction: column; min-width: 0; }
+  .recent > h2, .section-head h2 { margin: 0; font-weight: 400; font-size: 17px; letter-spacing: 0.16em; color: var(--muted); }
+  .ritem { padding: 18px 0; border-bottom: 1px solid var(--rules); display: flex; flex-direction: column; gap: 6px; }
+  .ritem h3 { margin: 0; font-weight: 500; font-size: 23px; line-height: 1.2; text-wrap: balance; }
+  .ritem.first h3 { font-size: 26px; line-height: 1.15; }
+  .ritem .kicker, .pin .kicker { font-size: 16px; }
+  .when { font-size: 16px; color: var(--muted); }
+  .thumb { margin-bottom: 6px; }
+  .thumb :global(img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border: 1px solid var(--rules); background: var(--surface); }
+
+  .notice { margin-top: 24px; border: 4px double var(--rules); padding: 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .notice p { margin: 0; font-style: italic; font-size: 17px; color: var(--body-sub); }
+  .btn-outline { margin-top: 4px; border: 1px solid var(--kicker); color: var(--kicker); padding: 8px 18px; min-height: 44px; display: inline-flex; align-items: center; font-size: 17px; }
+
+  /* ---- pinned ---- */
+  .pinned { padding-top: 56px; }
+  .section-head { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
+  .section-head::before, .section-head::after { content: ""; flex: 1; height: 1px; background: var(--rules); }
+  .pin-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+  .pin { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .pin + .pin { border-left: 1px solid var(--rules); padding-left: 32px; }
+  .pin-no { font-size: 24px; font-weight: 500; line-height: 1; color: var(--accent); }
+  .pin h3 { margin: 0; font-weight: 500; font-size: 25px; line-height: 1.2; text-wrap: balance; }
+  .pin p { margin: 0; font-style: italic; font-size: 17px; color: var(--body-sub); }
+
+  @media (max-width: 1000px) {
+    .home-grid { grid-template-columns: minmax(0, 1fr); }
+    .recent { border-left: 0; padding-left: 0; border-top: 1px solid var(--rules); padding-top: 28px; }
+    .pin-grid { grid-template-columns: minmax(0, 1fr); }
+    .pin + .pin { border-left: 0; padding-left: 0; border-top: 1px solid var(--rules); padding-top: 24px; }
+  }
+  @media (max-width: 760px) {
+    .topbar { justify-content: center; }
+    .topbar .date { display: none; }
+    .tagline { text-align: center; }
+    .tagline::before, .tagline::after { display: none; }
+    .sections a { padding: 8px 10px; }
+  }
+</style>

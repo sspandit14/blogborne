@@ -1,0 +1,26 @@
+---
+import { SITE } from "../site";
+---
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="logo" href="/">{SITE.title}</a>
+    <nav class="sc" aria-label="Footer">
+      <a href="/search/">Archives</a>
+      <a href="/search/">Search</a>
+      <a href="/about/">About</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .foot { margin-top: 64px; border-top: 4px double var(--rules); }
+  .wrap {
+    padding-block: 18px 40px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px 24px;
+  }
+  .logo { font-family: var(--font-mast); font-size: 30px; }
+  nav { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 17px; }
+</style>

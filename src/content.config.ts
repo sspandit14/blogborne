@@ -8,13 +8,27 @@ const posts = defineCollection({
     pattern: "**/*.md",
   }),
 
-  schema: z.object({
+  schema: ({image}) => z.object({
     title: z.string(),
     description: z.string(),
+    kicker: z.string().optional(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
+    featured: z.boolean().default(false),
+    pinned: z.boolean().default(false),
+    cover: image().optional(),
+    coverAlt: z.string().optional(),
+    coverCaption: z.string().optional(),
+    coverCredit: z.string().optional(),
+    // the work an essay discusses, shown as the "Under Review" box
+    review: z.object({
+      title: z.string(),
+      creator: z.string().optional(),
+      year: z.coerce.string().optional(),
+      medium: z.string().optional(),
+    }).optional(),
   }),
 });
 

@@ -1,0 +1,24 @@
+/* Design tokens: the single source of truth for colour and type.
+   Palette = "Moonlit" (chosen in the mockup). Dark only, by design. */
+:root {
+  color-scheme: dark;
+
+  /* colour */
+  --background: #0f1013; /* page */
+  --surface:    #181a1f; /* boxes, image placeholders */
+  --rules:      #30343c; /* hairlines and double rules */
+  --body-text:  #e4e0d8; /* main text */
+  --body-sub:   #c3c1bb; /* deks, captions, italic asides */
+  --muted:      #959aa3; /* dates, meta, labels */
+  --kicker:     #a9b4c2; /* small-caps kickers */
+  --accent:     #d25c50; /* links on hover, current page, buttons */
+  --blood:      #8b1a1a; /* drop caps, numerals, ornaments */
+
+  /* type */
+  --font-mast: "UnifrakturMaguntia", "Old English Text MT", "Times New Roman", serif;
+  --font-body: "EB Garamond", Garamond, "Times New Roman", Georgia, serif;
+
+  /* layout */
+  --gutter: clamp(16px, 4vw, 56px);
+  --page-max: 1600px;
+}

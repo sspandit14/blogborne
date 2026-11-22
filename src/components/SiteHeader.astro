@@ -1,0 +1,56 @@
+---
+// Compact header used on every page except Home (Home has the full masthead).
+// Logo left · sections centre · utility links right.
+import { SITE, SECTIONS, UTILITY } from "../site";
+
+const path = Astro.url.pathname;
+---
+
+<header class="chead">
+  <div class="wrap">
+    <a class="logo" href="/">{SITE.title}</a>
+
+    <nav class="sections sc" aria-label="Sections">
+      {SECTIONS.map((s, i) => (
+        <>
+          {i > 0 && <span class="bar" aria-hidden="true">|</span>}
+          <a href={s.href}>{s.label}</a>
+        </>
+      ))}
+    </nav>
+
+    <nav class="utility sc" aria-label="Utility">
+      {UTILITY.map((u) => {
+        const current = path.startsWith(u.href);
+        return (
+          <a href={u.href} class:list={{ "is-current": current }} aria-current={current ? "page" : undefined}>
+            {u.label}
+          </a>
+        );
+      })}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .chead { border-bottom: 4px double var(--rules); }
+  .wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    padding-block: 12px;
+  }
+  .logo { justify-self: start; font-family: var(--font-mast); font-size: 40px; line-height: 1; }
+  .sections { display: flex; align-items: center; }
+  .sections a { padding: 8px 14px; }
+  .utility { justify-self: end; display: flex; gap: 22px; }
+
+  @media (max-width: 1000px) {
+    .wrap { grid-template-columns: minmax(0, 1fr) auto; }
+    .sections { display: none; }
+  }
+  @media (max-width: 760px) {
+    .logo { font-size: 32px; }
+  }
+</style>

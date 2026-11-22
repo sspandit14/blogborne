@@ -1,0 +1,178 @@
+---
+// Search. Every published post is rendered into the page at build time;
+// a small script then hides the ones that don't match the text box / subject
+// chip. No search index or server needed at this size.
+// URL params: ?q=words&tag=film (so section links and tag links can land here).
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SUBJECTS } from "../site";
+import { getPublishedPosts, formatDate, postHref } from "../lib/posts";
+
+const posts = await getPublishedPosts();
+---
+
+<BaseLayout title="Search" description="Every essay set down here, by word or by subject.">
+  <main class="wrap search-main">
+    <div class="s-head">
+      <h1>Search the Archives</h1>
+      <span class="kicker sc">The Index</span>
+      <p>Every essay set down here, by word or by subject.</p>
+    </div>
+
+    <form class="seek" role="search" id="seek-form">
+      <label class="sc" for="seek-q">Seek</label>
+      <div class="field">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path>
+        </svg>
+        <input id="seek-q" name="q" type="search" autocomplete="off" placeholder="dread, cathedrals, the long take…" />
+      </div>
+    </form>
+
+    <div class="chips" id="chips" role="group" aria-label="Filter by subject">
+      <button type="button" class="sc" data-tag="" aria-pressed="true">All</button>
+      {SUBJECTS.map((s) => (
+        <button type="button" class="sc" data-tag={s.toLowerCase()} aria-pressed="false">{s}</button>
+      ))}
+    </div>
+
+    <p class="count sc" id="count" aria-live="polite">{posts.length === 1 ? "1 essay" : `${posts.length} essays`}</p>
+
+    <ol class="results" id="results">
+      {posts.map((p) => {
+        const { title, description, kicker, tags, pubDate } = p.data;
+        const lowerTags = tags.map((t) => t.toLowerCase());
+        return (
+          <li
+            class="result"
+            data-tags={`|${lowerTags.join("|")}|`}
+            data-text={[title, description, kicker ?? "", ...tags].join(" ").toLowerCase()}
+          >
+            <div>
+              <a class="t" href={postHref(p)}>{title}</a>
+              {kicker && <span class="kicker sc">{kicker}</span>}
+              <span class="d">{description}</span>
+            </div>
+            <span class="rdate">{formatDate(pubDate, "medium")}</span>
+          </li>
+        );
+      })}
+    </ol>
+
+    <div class="empty" id="empty" hidden>
+      <span class="orn" aria-hidden="true">❦</span>
+      <p class="big">Nothing found in the dark.</p>
+      <p class="muted">Try a broader word, or clear the subject filter.</p>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("#seek-form")!;
+  const input = document.querySelector<HTMLInputElement>("#seek-q")!;
+  const chips = document.querySelector<HTMLElement>("#chips")!;
+  const count = document.querySelector<HTMLElement>("#count")!;
+  const empty = document.querySelector<HTMLElement>("#empty")!;
+  const items = [...document.querySelectorAll<HTMLLIElement>("#results .result")];
+
+  const params = new URLSearchParams(location.search);
+  let query = params.get("q") ?? "";
+  let tag = (params.get("tag") ?? "").toLowerCase();
+  input.value = query;
+
+  const chipFor = (t: string) => chips.querySelector<HTMLButtonElement>(`[data-tag="${CSS.escape(t)}"]`);
+
+  // A tag link from an article (e.g. "grief") may not be one of the subject
+  // chips; add a chip for it so the active filter is visible and clearable.
+  if (tag && !chipFor(tag)) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "sc";
+    b.dataset.tag = tag;
+    b.textContent = tag;
+    chips.append(b);
+  }
+
+  function update() {
+    const q = query.trim().toLowerCase();
+    let shown = 0;
+    for (const li of items) {
+      const match =
+        (!tag || li.dataset.tags!.includes(`|${tag}|`)) &&
+        (!q || li.dataset.text!.includes(q));
+      li.hidden = !match;
+      if (match) shown++;
+    }
+
+    chips.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tag === tag)));
+
+    const what = q ? ` for “${query.trim()}”` : "";
+    const where = tag ? ` in ${chipFor(tag)?.textContent ?? tag}` : "";
+    count.textContent = `${shown === 1 ? "1 essay" : `${shown} essays`}${what}${where}`;
+    empty.hidden = shown > 0;
+
+    // keep the URL in step so a filtered view can be bookmarked or shared
+    const url = new URL(location.href);
+    if (q) url.searchParams.set("q", query.trim()); else url.searchParams.delete("q");
+    if (tag) url.searchParams.set("tag", tag); else url.searchParams.delete("tag");
+    history.replaceState(null, "", url);
+  }
+
+  input.addEventListener("input", () => { query = input.value; update(); });
+  chips.addEventListener("click", (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>("button[data-tag]");
+    if (!b) return;
+    tag = b.dataset.tag ?? "";
+    update();
+  });
+  form.addEventListener("submit", (e) => e.preventDefault());
+
+  update();
+</script>
+
+<style>
+  .search-main { max-width: 900px; padding-top: 64px; }
+  .s-head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .s-head h1 { margin: 0; font-weight: 500; font-size: clamp(40px, 4.6vw, 64px); line-height: 1.05; }
+  .s-head .kicker { font-size: 20px; }
+  .s-head p { margin: 0; font-style: italic; font-size: 21px; color: var(--body-sub); }
+
+  .seek { margin-top: 40px; }
+  .seek label { display: block; font-size: 18px; color: var(--muted); margin-bottom: 6px; }
+  .field { display: flex; align-items: center; gap: 14px; border-bottom: 2px solid var(--accent); padding-bottom: 6px; }
+  .field:focus-within { outline: 2px solid var(--kicker); outline-offset: 6px; }
+  .field svg { flex-shrink: 0; stroke: var(--muted); }
+  .field input {
+    flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--body-text);
+    font-family: var(--font-body); font-size: clamp(24px, 2.4vw, 34px); padding: 6px 0;
+  }
+  .field input::placeholder { color: var(--muted); font-style: italic; }
+
+  /* :global because the script may add a chip, which won't carry the scope attribute */
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .chips :global(button) {
+    min-height: 44px; padding: 8px 18px; border: 1px solid var(--rules); background: transparent;
+    color: var(--body-text); font-family: var(--font-body); font-size: 19px; cursor: pointer;
+  }
+  .chips :global(button:hover) { border-color: var(--muted); }
+  .chips :global(button[aria-pressed="true"]) { background: var(--accent); border-color: var(--accent); color: var(--background); }
+
+  .count { margin: 36px 0 0; padding-bottom: 8px; border-bottom: 1px solid var(--rules); font-size: 18px; color: var(--muted); }
+  .results { list-style: none; margin: 0; padding: 0; }
+  .result { display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 8px 32px; padding: 24px 0; border-bottom: 1px solid var(--rules); }
+  .result > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .t { font-weight: 500; font-size: 28px; line-height: 1.2; }
+  .result .kicker { font-size: 17px; }
+  .d { font-style: italic; color: var(--body-sub); }
+  .rdate { text-align: right; font-size: 16px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  .empty { text-align: center; padding: 56px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .empty p { margin: 0; }
+  .orn { font-size: 30px; color: var(--blood); }
+  .big { font-style: italic; font-size: 26px; }
+
+  @media (max-width: 760px) {
+    .search-main { padding-top: 40px; }
+    .result { grid-template-columns: minmax(0, 1fr); }
+    .rdate { text-align: left; }
+  }
+</style>
