@@ -49,7 +49,5 @@ export function excerpt(body: string = "", words = 70): string {
   return list.length > words ? list.slice(0, words).join(" ") + "…" : text;
 }
 
-/** Where a tag links to: the search page filtered by that tag. */
-export function tagHref(tag: string): string {
-  return `/search/?tag=${encodeURIComponent(tag.toLowerCase())}`;
-}
+/** Where a tag links to: the archive page filtered by that tag. */
+export { archiveTagHref as tagHref } from "../site";

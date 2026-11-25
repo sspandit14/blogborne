@@ -1,12 +1,12 @@
 ---
-import { SITE } from "../site";
+import { SITE, ARCHIVES } from "../site";
 ---
 
 <footer class="foot">
   <div class="wrap">
     <a class="logo" href="/">{SITE.title}</a>
     <nav class="sc" aria-label="Footer">
-      <a href="/search/">Archives</a>
+      <a href={ARCHIVES}>Archives</a>
       <a href="/about/">About</a>
       <a href="/rss.xml">RSS</a>
     </nav>

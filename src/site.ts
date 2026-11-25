@@ -1,24 +1,41 @@
-// Site-wide constants and navigation, so header, footer and home masthead
-// all read from one place.
+// Site-wide constants and navigation, so header, footer, home masthead and
+// the archive page all read from one place.
 
 export const SITE = {
   title: "Blogborne",
-  tagline: "Essays on film, games, books & philosophy, set down by lamplight",
+  tagline: "the blog-based dissemination of thoughts",
 };
 
-// Section links in the masthead/compact header.
-// They point at the search page filtered by tag (built in a later step).
-export const SECTIONS = [
-  { label: "Film", href: "/search/?tag=film" },
-  { label: "Games", href: "/search/?tag=games" },
-  { label: "Philosophy", href: "/search/?tag=philosophy" },
-  { label: "Archives", href: "/search/" },
+// The writer, shown on the About page (placeholders for now).
+export const AUTHOR = {
+  name: "Sahil",
+  email: "which@email?",
+};
+
+export const ARCHIVES = "/archives/";
+
+/** The archive page filtered to one tag. */
+export function archiveTagHref(tag: string): string {
+  return `${ARCHIVES}?tag=${encodeURIComponent(tag.toLowerCase())}`;
+}
+
+// The subjects, in the order used everywhere (Home section row, archive filter chips).
+export const SUBJECTS = [
+  { label: "Books", tag: "books" },
+  { label: "Films", tag: "film" },
+  { label: "Games", tag: "games" },
+  { label: "Philosophy", tag: "philosophy" },
 ];
 
-// Filter chips on the search page (besides "All").
-export const SUBJECTS = ["Film", "Games", "Philosophy", "Books"];
+// Home's section row: each subject, then Archives.
+export const SECTIONS = [
+  ...SUBJECTS.map((s) => ({ label: s.label, href: archiveTagHref(s.tag) })),
+  { label: "Archives", href: ARCHIVES },
+];
 
-export const UTILITY = [
-  { label: "Search", href: "/search/" },
+// Right side of the compact header (every page except Home).
+export const PAGES = [
+  { label: "Home", href: "/" },
   { label: "About", href: "/about/" },
+  { label: "Archives", href: ARCHIVES },
 ];

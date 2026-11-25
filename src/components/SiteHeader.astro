@@ -1,33 +1,23 @@
 ---
 // Compact header used on every page except Home (Home has the full masthead).
-// Logo left · sections centre · utility links right.
-import { SITE, SECTIONS, UTILITY } from "../site";
+// Logo on the left, page links on the right, nothing in between.
+import { SITE, PAGES } from "../site";
 
 const path = Astro.url.pathname;
+// "/" would prefix-match every path, so Home only counts on an exact match
+const isCurrent = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 ---
 
 <header class="chead">
   <div class="wrap">
     <a class="logo" href="/">{SITE.title}</a>
 
-    <nav class="sections sc" aria-label="Sections">
-      {SECTIONS.map((s, i) => (
-        <>
-          {i > 0 && <span class="bar" aria-hidden="true">|</span>}
-          <a href={s.href}>{s.label}</a>
-        </>
+    <nav class="pages sc" aria-label="Pages">
+      {PAGES.map((p) => (
+        <a href={p.href} class:list={{ "is-current": isCurrent(p.href) }} aria-current={isCurrent(p.href) ? "page" : undefined}>
+          {p.label}
+        </a>
       ))}
-    </nav>
-
-    <nav class="utility sc" aria-label="Utility">
-      {UTILITY.map((u) => {
-        const current = path.startsWith(u.href);
-        return (
-          <a href={u.href} class:list={{ "is-current": current }} aria-current={current ? "page" : undefined}>
-            {u.label}
-          </a>
-        );
-      })}
     </nav>
   </div>
 </header>
@@ -35,22 +25,18 @@ const path = Astro.url.pathname;
 <style>
   .chead { border-bottom: 4px double var(--rules); }
   .wrap {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 8px 24px;
     padding-block: 12px;
   }
-  .logo { justify-self: start; font-family: var(--font-mast); font-size: 40px; line-height: 1; }
-  .sections { display: flex; align-items: center; }
-  .sections a { padding: 8px 14px; }
-  .utility { justify-self: end; display: flex; gap: 22px; }
+  .logo { font-family: var(--font-mast); font-size: 40px; line-height: 1; }
+  .pages { display: flex; gap: 22px; font-size: 19px; }
 
-  @media (max-width: 1000px) {
-    .wrap { grid-template-columns: minmax(0, 1fr) auto; }
-    .sections { display: none; }
-  }
   @media (max-width: 760px) {
     .logo { font-size: 32px; }
+    .pages { gap: 16px; }
   }
 </style>

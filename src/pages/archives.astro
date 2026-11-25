@@ -1,5 +1,5 @@
 ---
-// Search. Every published post is rendered into the page at build time;
+// Archives (search + browse). Every published post is rendered into the page at build time;
 // a small script then hides the ones that don't match the text box / subject
 // chip. No search index or server needed at this size.
 // URL params: ?q=words&tag=film (so section links and tag links can land here).
@@ -10,7 +10,7 @@ import { getPublishedPosts, formatDate, postHref } from "../lib/posts";
 const posts = await getPublishedPosts();
 ---
 
-<BaseLayout title="Search" description="Every essay set down here, by word or by subject.">
+<BaseLayout title="Archives" description="Every essay set down here, by word or by subject.">
   <main class="wrap search-main">
     <div class="s-head">
       <h1>Search the Archives</h1>
@@ -31,7 +31,7 @@ const posts = await getPublishedPosts();
     <div class="chips" id="chips" role="group" aria-label="Filter by subject">
       <button type="button" class="sc" data-tag="" aria-pressed="true">All</button>
       {SUBJECTS.map((s) => (
-        <button type="button" class="sc" data-tag={s.toLowerCase()} aria-pressed="false">{s}</button>
+        <button type="button" class="sc" data-tag={s.tag} aria-pressed="false">{s.label}</button>
       ))}
     </div>
 

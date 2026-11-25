@@ -1,6 +1,17 @@
 /* Site-wide base styles and small shared utilities.
    Page-specific styles live in each page/component's own <style> block. */
 @import "./tokens.css";
+@import "./prose.css";
+
+/* Self-hosted logo face (fan-made "flesh and blood" by JoannaVu, from FontSpace).
+   Lives in public/, so it's served as-is at /fonts/fleshandblood.ttf. */
+@font-face {
+  font-family: "Fleshandblood";
+  src: url("/fonts/fleshandblood.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 *, *::before, *::after { box-sizing: border-box; }
 

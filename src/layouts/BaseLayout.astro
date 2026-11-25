@@ -25,11 +25,14 @@ const fullTitle = title ? `${title} · ${SITE.title}` : SITE.title;
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
+    <!-- logo font is self-hosted; preload it so the wordmark doesn't flash in a fallback -->
+    <link rel="preload" href="/fonts/fleshandblood.ttf" as="font" type="font/ttf" crossorigin />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
     />
   </head>
   <body>

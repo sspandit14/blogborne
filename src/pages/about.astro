@@ -1,0 +1,74 @@
+---
+// About. No mockup; structure borrows from newspaper "about" pages:
+// centred head → staff card beside the main text.
+// The main text lives in src/content/about.md so it can be written in Markdown.
+import { Image } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { AUTHOR, ARCHIVES } from "../site";
+import { Content, frontmatter } from "../content/about.md";
+import portrait from "../assets/temp_pfp.png";
+---
+
+<BaseLayout title="About" description={frontmatter.dek}>
+  <main class="wrap about-main">
+    <header class="about-head">
+      <span class="kicker sc">About</span>
+      <h1>On Blogborne</h1>
+      <p class="dek">{frontmatter.dek}</p>
+    </header>
+
+    <div class="about-grid">
+      <aside class="staff" aria-label="About the writer">
+        <Image src={portrait} alt={`Portrait of ${AUTHOR.name}`} widths={[240, 480]} sizes="(max-width: 860px) 96px, 240px" class="portrait" />
+        <div class="who">
+          <p class="name">{AUTHOR.name}</p>
+          <nav class="contact sc" aria-label="Contact">
+            <a href={`mailto:${AUTHOR.email}`}>Email</a>
+            <span class="bar" aria-hidden="true">·</span>
+            <a href="/rss.xml">RSS</a>
+            <span class="bar" aria-hidden="true">·</span>
+            <a href={ARCHIVES}>Archives</a>
+          </nav>
+        </div>
+      </aside>
+
+      <div class="about-body prose">
+        <Content />
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .about-main { max-width: 1080px; padding-top: 64px; }
+
+  /* ---- head (same shape as an article head) ---- */
+  .about-head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; padding-bottom: 32px; border-bottom: 1px solid var(--rules); }
+  .about-head .kicker { font-size: 21px; }
+  h1 { margin: 0; font-weight: 500; font-size: clamp(40px, 5.2vw, 72px); line-height: 1.04; }
+  .dek { margin: 4px 0 0; max-width: 680px; font-style: italic; font-size: clamp(20px, 1.8vw, 25px); line-height: 1.4; color: var(--body-sub); text-wrap: balance; }
+
+  /* ---- staff card + text ---- */
+  .about-grid { display: grid; grid-template-columns: 240px minmax(0, 680px); justify-content: center; gap: 56px; padding-top: 40px; }
+  .staff { display: flex; flex-direction: column; gap: 14px; align-self: start; position: sticky; top: 24px; }
+  .staff :global(.portrait) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border: 1px solid var(--rules); background: var(--surface); }
+  .who { display: flex; flex-direction: column; gap: 2px; }
+  .who p { margin: 0; }
+  .name { font-weight: 500; font-size: 25px; line-height: 1.2; }
+  .contact { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 17px; }
+  .contact a { color: var(--body-sub); }
+  .contact a:hover { color: var(--accent); }
+
+  /* the first heading in the text shouldn't push it down from the card */
+  .about-body > :global(h2:first-child) { margin-top: 0; }
+  .about-body :global(h2) { font-size: 17px; font-weight: 400; letter-spacing: 0.16em; color: var(--muted); font-variant-caps: all-small-caps; margin: 36px 0 10px; }
+
+  @media (max-width: 860px) {
+    .about-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+    .staff { position: static; flex-direction: row; align-items: center; gap: 18px; padding-bottom: 24px; border-bottom: 1px solid var(--rules); }
+    .staff :global(.portrait) { width: 96px; flex-shrink: 0; }
+  }
+  @media (max-width: 760px) {
+    .about-main { padding-top: 40px; }
+  }
+</style>

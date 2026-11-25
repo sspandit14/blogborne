@@ -15,9 +15,8 @@
   --blood:      #8b1a1a; /* drop caps, numerals, ornaments */
 
   /* type */
-  --font-mast: "UnifrakturMaguntia", "Old English Text MT", "Times New Roman", serif;
+  --font-mast: "Fleshandblood", "Times New Roman", serif; /* wordmark only */
   --font-body: "EB Garamond", Garamond, "Times New Roman", Georgia, serif;
-
   /* layout */
   --gutter: clamp(16px, 4vw, 56px);
   --page-max: 1600px;

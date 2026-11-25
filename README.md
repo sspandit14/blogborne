@@ -1,2 +1,3 @@
 # TODOs
--[] comments?
+-[] comment system?
+-[] add RSS
