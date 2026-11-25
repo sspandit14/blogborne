@@ -12,7 +12,20 @@ export const AUTHOR = {
   email: "which@email?",
 };
 
-export const ARCHIVES = "/archives/";
+// The base path from astro.config.mjs ("/blogborne" on GitHub Pages, "" on a
+// custom domain), without its trailing slash.
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+/**
+ * Turn a site path into a real link: url("/about/") → "/blogborne/about/".
+ * Every internal link goes through this, so moving the site only means
+ * changing `base` in astro.config.mjs.
+ */
+export function url(path: string): string {
+  return BASE + path;
+}
+
+export const ARCHIVES = url("/archives/");
 
 /** The archive page filtered to one tag. */
 export function archiveTagHref(tag: string): string {
@@ -35,7 +48,7 @@ export const SECTIONS = [
 
 // Right side of the compact header (every page except Home).
 export const PAGES = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about/" },
+  { label: "Home", href: url("/") },
+  { label: "About", href: url("/about/") },
   { label: "Archives", href: ARCHIVES },
 ];

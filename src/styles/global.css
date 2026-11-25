@@ -4,10 +4,11 @@
 @import "./prose.css";
 
 /* Self-hosted logo face (fan-made "flesh and blood" by JoannaVu, from FontSpace).
-   Lives in public/, so it's served as-is at /fonts/fleshandblood.ttf. */
+   The path is relative to this file, so the build copies the font into _astro/
+   with a hashed name and writes the correct (base-prefixed) URL here. */
 @font-face {
   font-family: "Fleshandblood";
-  src: url("/fonts/fleshandblood.ttf") format("truetype");
+  src: url("../assets/fonts/fleshandblood.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;

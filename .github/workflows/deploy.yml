@@ -1,0 +1,41 @@
+# Builds the site and publishes it to GitHub Pages on every push to main.
+# One-time setup on GitHub: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # adds a "Run workflow" button in the Actions tab for manual deploys
+
+# The deploy job needs permission to publish to Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Don't let two deploys run at once; a newer push waits for the current one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Install, build, and upload the site
+        uses: withastro/action@v3 # Astro's official action: npm ci, astro build, upload dist/
+        with:
+          node-version: 24
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

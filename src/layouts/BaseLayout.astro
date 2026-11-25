@@ -4,7 +4,10 @@
 import "../styles/global.css";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
-import { SITE } from "../site";
+import { SITE, url } from "../site";
+// "?url" gives the font's final built URL (hashed, base-prefixed) for the preload
+// link, the same file global.css's @font-face points at.
+import logoFont from "../assets/fonts/fleshandblood.ttf?url";
 
 interface Props {
   title?: string;
@@ -23,10 +26,10 @@ const fullTitle = title ? `${title} · ${SITE.title}` : SITE.title;
     <meta name="generator" content={Astro.generator} />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={url("/favicon.svg")} />
 
     <!-- logo font is self-hosted; preload it so the wordmark doesn't flash in a fallback -->
-    <link rel="preload" href="/fonts/fleshandblood.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="preload" href={logoFont} as="font" type="font/ttf" crossorigin />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

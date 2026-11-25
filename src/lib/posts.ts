@@ -1,6 +1,7 @@
 // Helpers for querying and presenting posts. Pages call these instead of
 // repeating filter/sort/format logic.
 import { getCollection, type CollectionEntry } from "astro:content";
+import { url } from "../site";
 
 export type Post = CollectionEntry<"posts">;
 
@@ -25,7 +26,7 @@ export function formatDate(date: Date, style: keyof typeof DATE_STYLES = "long")
 
 /** URL of a post's page. */
 export function postHref(post: Post): string {
-  return `/posts/${post.id}/`;
+  return url(`/posts/${post.id}/`);
 }
 
 /**

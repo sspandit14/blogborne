@@ -1,14 +1,14 @@
 ---
-import { SITE, ARCHIVES } from "../site";
+import { SITE, ARCHIVES, url } from "../site";
 ---
 
 <footer class="foot">
   <div class="wrap">
-    <a class="logo" href="/">{SITE.title}</a>
+    <a class="logo" href={url("/")}>{SITE.title}</a>
     <nav class="sc" aria-label="Footer">
       <a href={ARCHIVES}>Archives</a>
-      <a href="/about/">About</a>
-      <a href="/rss.xml">RSS</a>
+      <a href={url("/about/")}>About</a>
+      <a href={url("/rss.xml")}>RSS</a>
     </nav>
   </div>
 </footer>

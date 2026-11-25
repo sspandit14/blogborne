@@ -6,7 +6,7 @@ import type { InferGetStaticPropsType } from "astro";
 import { render } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getPublishedPosts, formatDate, tagHref } from "../../lib/posts";
+import { getPublishedPosts, formatDate, tagHref, postHref } from "../../lib/posts";
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts(); // newest first
@@ -100,14 +100,14 @@ const reviewBy = review ? [review.creator, review.year, review.medium].filter(Bo
         <h2 id="others-h" class="sc">Further in the Archive</h2>
         <div class="others-grid">
           {prev ? (
-            <a href={`/posts/${prev.id}/`}>
+            <a href={postHref(prev)}>
               <span class="dir sc">← Previous</span>
               <span class="t">{prev.data.title}</span>
               {prev.data.kicker && <span class="kicker sc">{prev.data.kicker}</span>}
             </a>
           ) : <span />}
           {next && (
-            <a class="next" href={`/posts/${next.id}/`}>
+            <a class="next" href={postHref(next)}>
               <span class="dir sc">Next →</span>
               <span class="t">{next.data.title}</span>
               {next.data.kicker && <span class="kicker sc">{next.data.kicker}</span>}

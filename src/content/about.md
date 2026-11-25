@@ -18,4 +18,4 @@ Expect length. A typical essay is somewhere between two and five thousand words,
 
 ## Following along
 
-The easiest way to follow new essays is the [RSS feed](/rss.xml), which works with any feed reader. Everything ever published is listed in the [Archives](/archives/).
+The easiest way to follow new essays is the [RSS feed](../rss.xml), which works with any feed reader. Everything ever published is listed in the [Archives](../archives/).

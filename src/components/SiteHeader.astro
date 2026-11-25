@@ -1,16 +1,17 @@
 ---
 // Compact header used on every page except Home (Home has the full masthead).
 // Logo on the left, page links on the right, nothing in between.
-import { SITE, PAGES } from "../site";
+import { SITE, PAGES, url } from "../site";
 
-const path = Astro.url.pathname;
-// "/" would prefix-match every path, so Home only counts on an exact match
-const isCurrent = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
+const path = Astro.url.pathname; // includes the base, e.g. "/blogborne/about/"
+const home = url("/");
+// Home's path is a prefix of every path, so it only counts on an exact match
+const isCurrent = (href: string) => (href === home ? path === home : path.startsWith(href));
 ---
 
 <header class="chead">
   <div class="wrap">
-    <a class="logo" href="/">{SITE.title}</a>
+    <a class="logo" href={home}>{SITE.title}</a>
 
     <nav class="pages sc" aria-label="Pages">
       {PAGES.map((p) => (

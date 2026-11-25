@@ -4,7 +4,7 @@
 // The main text lives in src/content/about.md so it can be written in Markdown.
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { AUTHOR, ARCHIVES } from "../site";
+import { AUTHOR, ARCHIVES, url } from "../site";
 import { Content, frontmatter } from "../content/about.md";
 import portrait from "../assets/temp_pfp.png";
 ---
@@ -25,7 +25,7 @@ import portrait from "../assets/temp_pfp.png";
           <nav class="contact sc" aria-label="Contact">
             <a href={`mailto:${AUTHOR.email}`}>Email</a>
             <span class="bar" aria-hidden="true">·</span>
-            <a href="/rss.xml">RSS</a>
+            <a href={url("/rss.xml")}>RSS</a>
             <span class="bar" aria-hidden="true">·</span>
             <a href={ARCHIVES}>Archives</a>
           </nav>

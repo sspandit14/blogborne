@@ -3,7 +3,7 @@
 // newspaper masthead → 70/30 grid (lead essay | Recent column) → Pinned row.
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { SITE, SECTIONS, ARCHIVES } from "../site";
+import { SITE, SECTIONS, ARCHIVES, url } from "../site";
 import { getPublishedPosts, formatDate, excerpt, postHref } from "../lib/posts";
 
 const posts = await getPublishedPosts(); // newest first
@@ -26,9 +26,9 @@ const today = formatDate(new Date(), "full"); // the date the site was built
       <div class="topbar sc">
         <span class="date">{today} · No. {posts.length}</span>
         <nav class="utility" aria-label="Utility">
-          <a href="/about/">About</a>
+          <a href={url("/about/")}>About</a>
           <a href={ARCHIVES}>Search</a>
-          <a href="/rss.xml">RSS</a>
+          <a href={url("/rss.xml")}>RSS</a>
         </nav>
       </div>
     </div>
@@ -108,7 +108,7 @@ const today = formatDate(new Date(), "full"); // the date the site was built
 
         <div class="notice">
           <span class="label sc">— Stay Tuned —</span>
-          <a class="btn-outline sc" href="/rss.xml">Subscribe by RSS</a>
+          <a class="btn-outline sc" href={url("/rss.xml")}>Subscribe by RSS</a>
         </div>
       </aside>
     </div>
