@@ -50,5 +50,5 @@ export function excerpt(body: string = "", words = 70): string {
   return list.length > words ? list.slice(0, words).join(" ") + "…" : text;
 }
 
-/** Where a tag links to: the archive page filtered by that tag. */
-export { archiveTagHref as tagHref } from "../site";
+/** Where subject and tag links go: the archive, filtered by subject / searched by tag. */
+export { subjectHref, tagHref } from "../site";

@@ -3,8 +3,9 @@ title: "What the Lantern Knows"
 description: "Checkpoints, rest, and the design of a safe place in a hostile world."
 kicker: "On Games"
 pubDate: 2026-11-18
-tags:
+subjects:
   - games
+tags:
   - design
   - rest
 cover: ../../assets/placeholder/cover-portrait.jpg

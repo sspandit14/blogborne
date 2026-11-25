@@ -4,8 +4,9 @@ description: "Decay, nostalgia, and the pleasure of a past we never lived."
 kicker: "On Philosophy"
 pubDate: 2026-11-14
 updatedDate: 2026-11-20
-tags:
+subjects:
   - philosophy
+tags:
   - ruins
 cover: ../../assets/placeholder/cover-169.jpg
 coverAlt: "A grey-green dusk over a broken skyline"

@@ -3,7 +3,7 @@ title: "Dracula, Read as a Newspaper of the Damned"
 description: "A novel assembled from letters, diaries and clippings."
 kicker: "On Books"
 pubDate: 2026-09-29
-tags:
+subjects:
   - books
 pinned: true
 cover: ../../assets/placeholder/cover-square.jpg

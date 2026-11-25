@@ -1,15 +1,19 @@
 // Site-wide constants and navigation, so header, footer, home masthead and
 // the archive page all read from one place.
 
+// The subject list lives in its own file (the content schema needs it too).
+import { SUBJECTS } from "./subjects";
+export { SUBJECTS, subjectLabel } from "./subjects";
+
 export const SITE = {
   title: "Blogborne",
   tagline: "the blog-based dissemination of thoughts",
 };
 
-// The writer, shown on the About page (placeholders for now).
+// The writer, shown on the About page
 export const AUTHOR = {
   name: "Sahil",
-  email: "which@email?",
+  email: "blogborne@coldinstantcoffee.com",
 };
 
 // The base path from astro.config.mjs ("/blogborne" on GitHub Pages, "" on a
@@ -27,22 +31,21 @@ export function url(path: string): string {
 
 export const ARCHIVES = url("/archives/");
 
-/** The archive page filtered to one tag. */
-export function archiveTagHref(tag: string): string {
-  return `${ARCHIVES}?tag=${encodeURIComponent(tag.toLowerCase())}`;
+/** The archive page filtered to one subject: /archives/?subject=film */
+export function subjectHref(id: string): string {
+  return `${ARCHIVES}?subject=${encodeURIComponent(id)}`;
 }
 
-// The subjects, in the order used everywhere (Home section row, archive filter chips).
-export const SUBJECTS = [
-  { label: "Books", tag: "books" },
-  { label: "Films", tag: "film" },
-  { label: "Games", tag: "games" },
-  { label: "Philosophy", tag: "philosophy" },
-];
+/** The archive page searching for one tag: /archives/?q=tag:grief (quoted if it has spaces). */
+export function tagHref(tag: string): string {
+  const t = tag.toLowerCase();
+  return `${ARCHIVES}?q=${encodeURIComponent(/\s/.test(t) ? `tag:"${t}"` : `tag:${t}`)}`;
+}
+
 
 // Home's section row: each subject, then Archives.
 export const SECTIONS = [
-  ...SUBJECTS.map((s) => ({ label: s.label, href: archiveTagHref(s.tag) })),
+  ...SUBJECTS.map((s) => ({ label: s.label, href: subjectHref(s.id) })),
   { label: "Archives", href: ARCHIVES },
 ];
 

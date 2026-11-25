@@ -2,9 +2,10 @@
 title: "The Cathedral as a Machine for Awe: Stone, Light, Height and the Careful Engineering of Smallness"
 description: "A deliberately long title, no kicker and no cover image, to see how the layout copes with the plainest possible post."
 pubDate: 2026-11-12
+subjects:
+  - philosophy
 tags:
   - architecture
-  - philosophy
 ---
 
 A cathedral is a machine. Its inputs are stone, glass and centuries of labour; its output is a single feeling, produced reliably in nearly everyone who walks through the door: *you are small, and something here is not*.

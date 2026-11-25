@@ -61,8 +61,8 @@ a.is-current { color: var(--accent); }
   color: var(--blood);
 }
 
-/* .sr-only is the class Markdown footnotes use for their hidden heading */
-.visually-hidden, .sr-only {
+/* hidden visually but read by screen readers; Markdown footnotes use it for their heading */
+.sr-only {
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); white-space: nowrap;
 }

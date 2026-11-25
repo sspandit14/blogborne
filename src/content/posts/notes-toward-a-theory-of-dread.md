@@ -3,8 +3,9 @@ title: "Notes Toward a Theory of Dread"
 description: "Kierkegaard, the uncanny, and the odd comfort of being afraid on purpose."
 kicker: "On Philosophy"
 pubDate: 2026-10-14
-tags:
+subjects:
   - philosophy
+tags:
   - dread
 pinned: true
 ---

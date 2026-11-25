@@ -3,8 +3,9 @@ title: "Difficulty as a Form of Hospitality"
 description: "Hard games that refuse to explain themselves may be the most generous ones."
 kicker: "On Games"
 pubDate: 2026-11-02
-tags:
+subjects:
   - games
+tags:
   - design
 pinned: true
 cover: ../../assets/placeholder/cover-landscape.jpg

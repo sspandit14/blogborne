@@ -3,7 +3,7 @@ title: "A Short Note on Fog"
 description: "The shortest kind of post: one paragraph, no image, one tag."
 kicker: "Notes"
 pubDate: 2026-08-10
-tags:
+subjects:
   - film
 ---
 

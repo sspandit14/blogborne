@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { SUBJECT_IDS } from "./subjects";
 
 const posts = defineCollection({
   loader: glob({
@@ -14,6 +15,9 @@ const posts = defineCollection({
     kicker: z.string().optional(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
+    // which sections the post belongs to; must come from src/subjects.ts (typos fail the build)
+    subjects: z.array(z.enum(SUBJECT_IDS)).default([]),
+    // optional free-form keywords; searchable in the archive as tag:word
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     featured: z.boolean().default(false),

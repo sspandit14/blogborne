@@ -3,8 +3,9 @@ title: "The Long Take and the Patience of Grief"
 description: "What a nine-minute shot asks of its audience, and why we so badly want to look away."
 kicker: "On Cinema"
 pubDate: 2026-11-21
-tags:
+subjects:
   - film
+tags:
   - grief
   - time
 featured: true

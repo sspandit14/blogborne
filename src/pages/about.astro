@@ -12,8 +12,7 @@ import portrait from "../assets/temp_pfp.png";
 <BaseLayout title="About" description={frontmatter.dek}>
   <main class="wrap about-main">
     <header class="about-head">
-      <span class="kicker sc">About</span>
-      <h1>On Blogborne</h1>
+      <h1>About</h1>
       <p class="dek">{frontmatter.dek}</p>
     </header>
 
@@ -44,7 +43,6 @@ import portrait from "../assets/temp_pfp.png";
 
   /* ---- head (same shape as an article head) ---- */
   .about-head { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; padding-bottom: 32px; border-bottom: 1px solid var(--rules); }
-  .about-head .kicker { font-size: 21px; }
   h1 { margin: 0; font-weight: 500; font-size: clamp(40px, 5.2vw, 72px); line-height: 1.04; }
   .dek { margin: 4px 0 0; max-width: 680px; font-style: italic; font-size: clamp(20px, 1.8vw, 25px); line-height: 1.4; color: var(--body-sub); text-wrap: balance; }
 

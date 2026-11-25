@@ -6,7 +6,8 @@ import type { InferGetStaticPropsType } from "astro";
 import { render } from "astro:content";
 import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getPublishedPosts, formatDate, tagHref, postHref } from "../../lib/posts";
+import { getPublishedPosts, formatDate, subjectHref, tagHref, postHref } from "../../lib/posts";
+import { subjectLabel } from "../../site";
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts(); // newest first
@@ -25,7 +26,7 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const { post, issue, prev, next } = Astro.props;
 const { Content } = await render(post);
 const {
-  title, kicker, description, pubDate, updatedDate, tags,
+  title, kicker, description, pubDate, updatedDate, subjects, tags,
   cover, coverAlt, coverCaption, coverCredit, review,
 } = post.data;
 const reviewBy = review ? [review.creator, review.year, review.medium].filter(Boolean).join(" · ") : "";
@@ -83,15 +84,27 @@ const reviewBy = review ? [review.creator, review.year, review.medium].filter(Bo
       </div>
     </article>
 
-    {tags.length > 0 && (
+    {/* subjects link to the filtered archive; tags link to a tag: search, in a quieter style */}
+    {(subjects.length > 0 || tags.length > 0) && (
       <div class="tagband sc">
-        <span class="muted">Tags</span>
-        {tags.map((t, i) => (
+        {subjects.map((s, i) => (
           <>
             {i > 0 && <span class="bar" aria-hidden="true">·</span>}
-            <a href={tagHref(t)}>{t}</a>
+            <a href={subjectHref(s)}>{subjectLabel(s)}</a>
           </>
         ))}
+        {tags.length > 0 && (
+          <>
+            {subjects.length > 0 && <span class="bar sep" aria-hidden="true">|</span>}
+            <span class="muted">Tags</span>
+            {tags.map((t, i) => (
+              <>
+                {i > 0 && <span class="bar" aria-hidden="true">·</span>}
+                <a class="tag" href={tagHref(t)}>{t}</a>
+              </>
+            ))}
+          </>
+        )}
       </div>
     )}
 
@@ -154,6 +167,9 @@ const reviewBy = review ? [review.creator, review.year, review.medium].filter(Bo
   /* ---- after the article ---- */
   .tagband { margin-top: 56px; border-block: 1px solid var(--rules); padding: 12px 0; display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 4px 8px; font-size: 19px; }
   .tagband a { padding: 8px 10px; }
+  .tagband .sep { margin-inline: 8px; }
+  .tagband a.tag { color: var(--muted); }
+  .tagband a.tag:hover { color: var(--accent); }
 
   .others { margin-top: 40px; border: 4px double var(--rules); padding: 24px 32px 28px; }
   .others h2 { margin: 0 0 20px; text-align: center; font-weight: 400; font-size: 17px; letter-spacing: 0.16em; color: var(--muted); }
